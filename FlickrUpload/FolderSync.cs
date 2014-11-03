@@ -28,7 +28,7 @@ namespace FlickrUpload
         private void FolderSync_Load(object sender, EventArgs e)
         {
             Text = "FlickrUpload ( " + temp.FullName + " )";
-            rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
+            rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;            
         }
 
         private void browse_folder_Click(object sender, EventArgs e)
@@ -36,10 +36,7 @@ namespace FlickrUpload
             if (folderBrowser.ShowDialog() == DialogResult.OK)
             {
                 string sourceDirectory = Properties.Settings.Default.userDefinedRootFolder;
-                string destinationDirectory = folderBrowser.SelectedPath;
-                //DirectoryInfo dirInfo = new DirectoryInfo(sourceDirectory);
-                //string root = dirInfo.Name;                
-                //string newdes = Path.Combine(destinationDirectory, root);
+                string destinationDirectory = folderBrowser.SelectedPath;                
                 string newdes = destinationDirectory + @"\FlickrBox";
 
                 Properties.Settings.Default.userDefinedRootFolder = folderBrowser.SelectedPath + @"\FlickrBox";
@@ -146,16 +143,17 @@ namespace FlickrUpload
 
         private PhotosetPhotoCollection GetPhotos(string albumId, Flickr f)
         {
-            if (PhotoSets == null)
-                PhotoSets = new List<PhotosetPhotoCollection>();
+            //if (PhotoSets == null)
+            //    PhotoSets = new List<PhotosetPhotoCollection>();
 
-            var outputPhotoSet = PhotoSets.Where(set => set.PhotosetId == albumId).SingleOrDefault();
+            //var outputPhotoSet = PhotoSets.Where(set => set.PhotosetId == albumId).SingleOrDefault();
 
-            if (outputPhotoSet == null)
-            {
-                outputPhotoSet = f.PhotosetsGetPhotos(albumId);
-                PhotoSets.Add(outputPhotoSet);
-            }
+            //if (outputPhotoSet == null)
+            //{
+            //    outputPhotoSet = f.PhotosetsGetPhotos(albumId);
+            //    PhotoSets.Add(outputPhotoSet);
+            //}
+            var outputPhotoSet = f.PhotosetsGetPhotos(albumId);
             return outputPhotoSet;
         }
 
