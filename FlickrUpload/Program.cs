@@ -20,7 +20,7 @@ namespace FlickrUpload
 
             if (Properties.Settings.Default.userDefinedRootFolder == null)
             {
-                Properties.Settings.Default.userDefinedRootFolder = path + dirName;
+                Properties.Settings.Default.userDefinedRootFolder = path + dirName ;
                 Properties.Settings.Default.Save();
 
                 if (!Directory.Exists(path + dirName))

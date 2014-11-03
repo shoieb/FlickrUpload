@@ -27,6 +27,7 @@ namespace FlickrUpload
 
         private void FolderSync_Load(object sender, EventArgs e)
         {
+            Text = "FlickrUpload ( " + temp.FullName + " )";
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
         }
 
@@ -58,7 +59,36 @@ namespace FlickrUpload
 
         private void sync_Click(object sender, EventArgs e)
         {
+            sync.Enabled = false;
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var f = FlickrManager.GetAuthInstance();
+            f.OnUploadProgress += new EventHandler <FlickrNet.UploadProgressEventArgs>(flickr_OnUploadProgress);
             dirSearch(rootFolderTextBox.Text);
+        }
+
+        private void backgroundWorker1_RunWorkerComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (MessageBox.Show("--Done!--")==DialogResult.OK)
+            {
+                progressBar1.Refresh();
+                sync.Enabled = true;
+            }            
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Refresh();
+            progressBar1.Increment(e.ProgressPercentage);
+            progressBar1.PerformStep();
+        }
+
+        private void flickr_OnUploadProgress(object sender, FlickrNet.UploadProgressEventArgs e)
+        {
+            backgroundWorker1.ReportProgress(e.ProcessPercentage);
         }
 
         private void dirSearch(string searchPath)
@@ -147,6 +177,7 @@ namespace FlickrUpload
                 string dest = Path.Combine(destFolder, name);
                 CopyFolder(folder, dest);
             }
-        }
+        } 
+
     }
 }
