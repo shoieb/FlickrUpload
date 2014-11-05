@@ -43,9 +43,7 @@ namespace FlickrUpload
                 MessageBox.Show("Successfully authenticated as " + accessToken.FullName);
                 this.Hide();
                 folderSync.ShowDialog();
-                this.Close();
-                Application.Exit();
-
+                //this.Close();
             }
             catch (FlickrApiException ex)
             {

@@ -15,36 +15,28 @@ namespace FlickrUpload
     {
         authBox authForm = new authBox();
         FolderSync folderSync = new FolderSync();
+        OAuthAccessToken token = null;
         public FlickrUp()
         {
             InitializeComponent();
         }             
         
         private void FlickrUp_Load(object sender, EventArgs e)
-        {
-            OAuthAccessToken token = null;
-            try
+        {            
+            token = Properties.Settings.Default.OAuthToken;
+            if (token!=null)
             {
-                token = Properties.Settings.Default.OAuthToken;
-                if (token!=null)
-                {
-                    this.Hide();
-                    folderSync.ShowDialog();
-                    this.Close();
-                    Application.Exit();
-                }
-            }
-            catch (Exception)
-            {
-
-            }
+                this.Hide();
+                folderSync.ShowDialog();
+                //this.Close();
+             }            
         }
         private void buttonLoad_ok_Click(object sender, EventArgs e)
         {
             this.Hide();
             authForm.ShowDialog();
-            this.Close();
-            Application.Exit();
+            //this.Close();
+            //Application.Exit();
         }
     }
 }

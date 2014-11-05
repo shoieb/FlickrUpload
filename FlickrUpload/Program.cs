@@ -17,8 +17,8 @@ namespace FlickrUpload
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string dirName = @"\FlickrBox";
-
-            if (Properties.Settings.Default.userDefinedRootFolder == null)
+            string syncPath = Properties.Settings.Default.userDefinedRootFolder;
+            if (string.IsNullOrEmpty(syncPath))
             {
                 Properties.Settings.Default.userDefinedRootFolder = path + dirName ;
                 Properties.Settings.Default.Save();
