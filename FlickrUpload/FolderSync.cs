@@ -27,7 +27,7 @@ namespace FlickrUpload
 
         public FolderSync()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void FolderSync_Load(object sender, EventArgs e)
@@ -35,10 +35,7 @@ namespace FlickrUpload
             Text = "FlickrUpload ( " + temp.FullName + " )";
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
 
-            appTimer.Enabled = true;
-            appTimer.Interval = 10000;
-            appTimer.Tick += new EventHandler(sync_Click);
-            appTimer.Start();
+            backgroundWorker1.WorkerReportsProgress = true;
         }
 
         private void browse_folder_Click(object sender, EventArgs e)
@@ -66,9 +63,10 @@ namespace FlickrUpload
         }  
 
         private void sync_Click(object sender, EventArgs e)
-        {
+        {            
             sync.Enabled = false;
-            backgroundWorker1.RunWorkerAsync();
+            browse_folder.Enabled = false;
+            backgroundWorker1.RunWorkerAsync();            
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -80,11 +78,11 @@ namespace FlickrUpload
 
         private void backgroundWorker1_RunWorkerComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (MessageBox.Show("--Done!--")==DialogResult.OK)
+            if (MessageBox.Show("--Done!--") == DialogResult.OK)
             {
                 progressBar1.Refresh();
                 sync.Enabled = true;
-            }            
+            }      
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -134,7 +132,6 @@ namespace FlickrUpload
                 var strPhotoId = f.UploadPicture(filePath, fileName, "sample", null, false, false, false);
                 Photoset myset = f.PhotosetsCreate(folderName, strPhotoId);
                 ini.IniWriteValue("info", "id", myset.PhotosetId);
-                log.Info(fileName + "Uploaded!");
             }
             else
             {
@@ -144,14 +141,12 @@ namespace FlickrUpload
                     var existingPhoto = GetPhotos(albumId, f).Where(p => p.Title.Contains(fileName)).SingleOrDefault();
                     if (existingPhoto == null)
                         f.PhotosetsAddPhoto(albumId, f.UploadPicture(filePath, fileName, "sample", null, false, false, false));
-                    log.Info(fileName + "Uploaded!");
                 }
                 catch
                 {
                     var strPhotoId = f.UploadPicture(filePath, fileName, "sample", null, false, false, false);
                     Photoset myset = f.PhotosetsCreate(folderName, strPhotoId);
                     ini.IniWriteValue("info", "id", myset.PhotosetId);
-                    log.Info(fileName + "Uploaded!");
                 }
             }            
         }
@@ -190,7 +185,6 @@ namespace FlickrUpload
                 string dest = Path.Combine(destFolder, name);
                 CopyFolder(folder, dest);
             }
-        } 
-
+        }         
     }
 }
