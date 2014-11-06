@@ -19,18 +19,16 @@ namespace FlickrUpload
 
         OAuthAccessToken temp;
         
-        List<PhotosetPhotoCollection> PhotoSets;
+        //List<PhotosetPhotoCollection> PhotoSets;
 
         FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
 
-        Timer appTimer = new Timer();
-
-        //FlickrUp frm = new FlickrUp();
-
+        //Timer appTimer = new Timer();
+        
         public FolderSync()
         {
             InitializeComponent();
-           
+            rootFolderTextBox.Enabled = false;
         }
 
         private void FolderSync_Load(object sender, EventArgs e)
@@ -68,7 +66,10 @@ namespace FlickrUpload
         private void reset_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.Reset();
-            this.Close();
+            this.Hide();
+            FlickrUp frm = new FlickrUp();
+            frm.ShowDialog();
+            //this.Close();
         }
 
         private void sync_Click(object sender, EventArgs e)
@@ -89,6 +90,7 @@ namespace FlickrUpload
             if (MessageBox.Show("--Done!--") == DialogResult.OK)
             {
                 sync.Enabled = true;
+                browse_folder.Enabled = true;
             }      
         }
 
@@ -187,7 +189,6 @@ namespace FlickrUpload
                 CopyFolder(folder, dest);
             }
         }
-
                 
     }
 }

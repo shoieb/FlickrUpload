@@ -13,7 +13,7 @@ namespace FlickrUpload
 {
     public partial class authBox : Form
     {
-        FolderSync folderSync = new FolderSync();
+        
         private OAuthRequestToken requestToken;
         public authBox()
         {
@@ -42,8 +42,10 @@ namespace FlickrUpload
                 FlickrManager.OAuthToken = accessToken;
                 MessageBox.Show("Successfully authenticated as " + accessToken.FullName);
                 this.Hide();
+                FolderSync folderSync = new FolderSync();
                 folderSync.ShowDialog();
-                //this.Close();
+                this.Close();
+                Application.Exit();
             }
             catch (FlickrApiException ex)
             {

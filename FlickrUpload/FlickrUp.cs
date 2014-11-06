@@ -13,8 +13,6 @@ namespace FlickrUpload
 {
     public partial class FlickrUp : Form
     {
-        authBox authForm = new authBox();
-        FolderSync folderSync = new FolderSync();
         OAuthAccessToken token = null;
         public FlickrUp()
         {
@@ -27,16 +25,20 @@ namespace FlickrUpload
             if (token!=null)
             {
                 this.Hide();
+                FolderSync folderSync = new FolderSync();
                 folderSync.ShowDialog();
-                //this.Close();
+                this.Close();
              }            
         }
+
         private void buttonLoad_ok_Click(object sender, EventArgs e)
         {
             this.Hide();
+            authBox authForm = new authBox();
             authForm.ShowDialog();
-            //this.Close();
-            //Application.Exit();
+            this.Close();
+            Application.Exit();
         }
+
     }
 }

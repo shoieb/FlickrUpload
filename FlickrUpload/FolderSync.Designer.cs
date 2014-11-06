@@ -90,7 +90,7 @@
             this.reset.Name = "reset";
             this.reset.Size = new System.Drawing.Size(75, 23);
             this.reset.TabIndex = 4;
-            this.reset.Text = "Reset";
+            this.reset.Text = "Logout";
             this.reset.UseVisualStyleBackColor = true;
             this.reset.Click += new System.EventHandler(this.reset_Click);
             // 
