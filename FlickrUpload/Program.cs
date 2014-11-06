@@ -15,19 +15,19 @@ namespace FlickrUpload
         [STAThread]
         static void Main()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string dirName = @"\FlickrBox";
-            string syncPath = Properties.Settings.Default.userDefinedRootFolder;
-            if (string.IsNullOrEmpty(syncPath))
-            {
-                Properties.Settings.Default.userDefinedRootFolder = path + dirName ;
-                Properties.Settings.Default.Save();
+            //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //string dirName = @"\FlickrBox";
+            //string syncPath = Properties.Settings.Default.userDefinedRootFolder;
+            //if (string.IsNullOrEmpty(syncPath))
+            //{
+            //    Properties.Settings.Default.userDefinedRootFolder = path + dirName ;
+            //    Properties.Settings.Default.Save();
 
-                if (!Directory.Exists(path + dirName))
-                {
-                    Directory.CreateDirectory(path + dirName);
-                }
-            }
+            //    if (!Directory.Exists(path + dirName))
+            //    {
+            //        Directory.CreateDirectory(path + dirName);
+            //    }
+            //}
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

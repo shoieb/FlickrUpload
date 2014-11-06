@@ -34,7 +34,7 @@ namespace FlickrUpload
         private void FolderSync_Load(object sender, EventArgs e)
         {
             temp = Properties.Settings.Default.OAuthToken;
-            Text = "FlickrUpload ( " + temp.FullName + " )";
+            Text = "FlickrUpload ( " + temp.Username + " )";
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
             backgroundWorker1.WorkerReportsProgress = true;
         }
@@ -45,21 +45,21 @@ namespace FlickrUpload
             {
                 string sourceDirectory = Properties.Settings.Default.userDefinedRootFolder;
                 string destinationDirectory = folderBrowser.SelectedPath;                
-                string newdes = destinationDirectory + @"\FlickrBox";
+                //string newdes = destinationDirectory + @"\FlickrBox";
 
-                Properties.Settings.Default.userDefinedRootFolder = folderBrowser.SelectedPath + @"\FlickrBox";
+                Properties.Settings.Default.userDefinedRootFolder = folderBrowser.SelectedPath; //+@"\FlickrBox";
                 Properties.Settings.Default.Save();
                 rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
-                try
-                {
-                    CopyFolder(sourceDirectory, newdes);
-                    Directory.Delete(sourceDirectory, true);
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    log.Fatal(ex.Message, ex);
-                }
+                //try
+                //{
+                //    CopyFolder(sourceDirectory, destinationDirectory);
+                //    Directory.Delete(sourceDirectory, true);
+                //}
+                //catch(Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //    log.Fatal(ex.Message, ex);
+                //}
             }
         }
 
@@ -170,25 +170,25 @@ namespace FlickrUpload
             return outputPhotoSet;
         }
 
-        private void CopyFolder(string sourceFolder, string destFolder)
-        {
-            if (!Directory.Exists(destFolder))
-                Directory.CreateDirectory(destFolder);
-            string[] files = Directory.GetFiles(sourceFolder);
-            foreach (string file in files)
-            {
-                string name = Path.GetFileName(file);
-                string dest = Path.Combine(destFolder, name);
-                File.Copy(file, dest);
-            }
-            string[] folders = Directory.GetDirectories(sourceFolder);
-            foreach (string folder in folders)
-            {
-                string name = Path.GetFileName(folder);
-                string dest = Path.Combine(destFolder, name);
-                CopyFolder(folder, dest);
-            }
-        }
+        //private void CopyFolder(string sourceFolder, string destFolder)
+        //{
+        //    if (!Directory.Exists(destFolder))
+        //        Directory.CreateDirectory(destFolder);
+        //    string[] files = Directory.GetFiles(sourceFolder);
+        //    foreach (string file in files)
+        //    {
+        //        string name = Path.GetFileName(file);
+        //        string dest = Path.Combine(destFolder, name);
+        //        File.Copy(file, dest);
+        //    }
+        //    string[] folders = Directory.GetDirectories(sourceFolder);
+        //    foreach (string folder in folders)
+        //    {
+        //        string name = Path.GetFileName(folder);
+        //        string dest = Path.Combine(destFolder, name);
+        //        CopyFolder(folder, dest);
+        //    }
+        //}
                 
     }
 }

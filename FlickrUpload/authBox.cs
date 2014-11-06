@@ -40,7 +40,7 @@ namespace FlickrUpload
             {
                 var accessToken = f.OAuthGetAccessToken(requestToken, verifierTextBox.Text);
                 FlickrManager.OAuthToken = accessToken;
-                MessageBox.Show("Successfully authenticated as " + accessToken.FullName);
+                MessageBox.Show("Successfully authenticated as " + accessToken.Username);
                 this.Hide();
                 FolderSync folderSync = new FolderSync();
                 folderSync.ShowDialog();
