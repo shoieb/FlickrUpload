@@ -22,7 +22,6 @@ namespace FlickrUpload
         FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
 
         Timer appTimer = new Timer();
-
         
         public FolderSync()
         {
@@ -37,9 +36,7 @@ namespace FlickrUpload
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
 
             backgroundWorker1.WorkerReportsProgress = true;
-            backgroundWorker1.WorkerSupportsCancellation = true;
-
-            
+            backgroundWorker1.WorkerSupportsCancellation = true;            
         }
 
         private void browse_folder_Click(object sender, EventArgs e)
@@ -52,8 +49,7 @@ namespace FlickrUpload
 
                 Properties.Settings.Default.userDefinedRootFolder = folderBrowser.SelectedPath; //+@"\FlickrBox";
                 Properties.Settings.Default.Save();
-                rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
-                
+                rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;                
             }
         }
 
@@ -63,7 +59,6 @@ namespace FlickrUpload
             this.Hide();
             FlickrUp frm = new FlickrUp();
             frm.ShowDialog();
-
         }
 
         private void sync_Click(object sender, EventArgs e)
@@ -76,9 +71,6 @@ namespace FlickrUpload
         private void syncCancel_Click(object sender, EventArgs e)
         {
             backgroundWorker1.CancelAsync();
-            
-            sync.Enabled = true;
-            browse_folder.Enabled = true;
         }
 
         private void appTimer_tick(object sender, EventArgs e)
@@ -87,14 +79,14 @@ namespace FlickrUpload
 
             sync.Enabled = false;
             browse_folder.Enabled = false;
+
             backgroundWorker1.RunWorkerAsync();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             var f = FlickrManager.GetAuthInstance();
-            dirSearch(rootFolderTextBox.Text, e);
-                        
+            dirSearch(rootFolderTextBox.Text, e);                        
         }
 
         private void backgroundWorker1_RunWorkerComplete(object sender, RunWorkerCompletedEventArgs e)
@@ -104,12 +96,10 @@ namespace FlickrUpload
             if (e.Cancelled)
             {
                 appTimer.Stop();
-            }
-            sync.Enabled = true;
-            browse_folder.Enabled = true;
-     
+                sync.Enabled = true;
+                browse_folder.Enabled = true;
+            }     
         }
-
         
         private void flickr_OnUploadProgress(object sender, FlickrNet.UploadProgressEventArgs e)
         {
@@ -149,6 +139,7 @@ namespace FlickrUpload
             if (backgroundWorker1.CancellationPending == true)
             {
                 e.Cancel = true;
+                return;
             }
 
             if (!File.Exists(configPath))
@@ -179,9 +170,7 @@ namespace FlickrUpload
         {
             var outputPhotoSet = f.PhotosetsGetPhotos(albumId);
             return outputPhotoSet;
-        }
-
-        
+        }       
                        
     }
 }
