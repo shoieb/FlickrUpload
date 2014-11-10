@@ -21,7 +21,7 @@ namespace FlickrUpload
         
         //List<PhotosetPhotoCollection> PhotoSets;
 
-        FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+        FolderBrowserDialog folderBrowser = new FolderBrowserDialog(); 
 
         //Timer appTimer = new Timer();
         
