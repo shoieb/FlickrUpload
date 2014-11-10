@@ -18,12 +18,11 @@ namespace FlickrUpload
         private static readonly ILog log = LogManager.GetLogger(typeof(FolderSync));
 
         OAuthAccessToken temp;
-        
-        //List<PhotosetPhotoCollection> PhotoSets;
 
-        FolderBrowserDialog folderBrowser = new FolderBrowserDialog(); 
+        FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
 
-        //Timer appTimer = new Timer();
+        Timer appTimer = new Timer();
+
         
         public FolderSync()
         {
@@ -36,7 +35,11 @@ namespace FlickrUpload
             temp = Properties.Settings.Default.OAuthToken;
             Text = "FlickrUpload ( " + temp.Username + " )";
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
+
             backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
+
+            
         }
 
         private void browse_folder_Click(object sender, EventArgs e)
@@ -50,16 +53,7 @@ namespace FlickrUpload
                 Properties.Settings.Default.userDefinedRootFolder = folderBrowser.SelectedPath; //+@"\FlickrBox";
                 Properties.Settings.Default.Save();
                 rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
-                //try
-                //{
-                //    CopyFolder(sourceDirectory, destinationDirectory);
-                //    Directory.Delete(sourceDirectory, true);
-                //}
-                //catch(Exception ex)
-                //{
-                //    MessageBox.Show(ex.Message);
-                //    log.Fatal(ex.Message, ex);
-                //}
+                
             }
         }
 
@@ -69,29 +63,51 @@ namespace FlickrUpload
             this.Hide();
             FlickrUp frm = new FlickrUp();
             frm.ShowDialog();
-            //this.Close();
+
         }
 
         private void sync_Click(object sender, EventArgs e)
-        {            
+        {
+            appTimer.Interval = 3000;
+            appTimer.Tick += new EventHandler(appTimer_tick);
+            appTimer.Start();
+        }
+
+        private void syncCancel_Click(object sender, EventArgs e)
+        {
+            backgroundWorker1.CancelAsync();
+            
+            sync.Enabled = true;
+            browse_folder.Enabled = true;
+        }
+
+        private void appTimer_tick(object sender, EventArgs e)
+        {
+            appTimer.Stop();
+
             sync.Enabled = false;
             browse_folder.Enabled = false;
-            backgroundWorker1.RunWorkerAsync();            
+            backgroundWorker1.RunWorkerAsync();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            var f = FlickrManager.GetAuthInstance();            
-            dirSearch(rootFolderTextBox.Text);
+            var f = FlickrManager.GetAuthInstance();
+            dirSearch(rootFolderTextBox.Text, e);
+                        
         }
 
         private void backgroundWorker1_RunWorkerComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (MessageBox.Show("--Done!--") == DialogResult.OK)
+            appTimer.Start();
+           
+            if (e.Cancelled)
             {
-                sync.Enabled = true;
-                browse_folder.Enabled = true;
-            }      
+                appTimer.Stop();
+            }
+            sync.Enabled = true;
+            browse_folder.Enabled = true;
+     
         }
 
         
@@ -100,8 +116,8 @@ namespace FlickrUpload
             backgroundWorker1.ReportProgress(e.ProcessPercentage);
         }
 
-        private void dirSearch(string searchPath)
-        {
+        private void dirSearch(string searchPath, DoWorkEventArgs e)
+        { 
             var dirconfigPath = searchPath + @"\config.ini";
             iniFile ini = new iniFile(dirconfigPath);
             var f = FlickrManager.GetAuthInstance();
@@ -109,11 +125,11 @@ namespace FlickrUpload
             {
                 foreach (var photoPath in Directory.GetFiles(searchPath, "*.jpg"))
                 {
-                    photoUpload(photoPath, dirconfigPath, f);
+                    photoUpload(photoPath, dirconfigPath, f, e);
                 }
                 foreach (var dirPath in Directory.GetDirectories(searchPath))
                 {
-                    dirSearch(dirPath);
+                    dirSearch(dirPath, e);
                 }
             }
             catch (Exception ex)
@@ -123,12 +139,17 @@ namespace FlickrUpload
             }
         }
 
-        private void photoUpload(string filePath, string configPath, Flickr f)
+        private void photoUpload(string filePath, string configPath, Flickr f, DoWorkEventArgs e)
         {
             FileInfo fileInfo = new FileInfo(filePath);
             var fileName = fileInfo.Name;
             var folderName = fileInfo.Directory.Name;
             iniFile ini = new iniFile(configPath);
+
+            if (backgroundWorker1.CancellationPending == true)
+            {
+                e.Cancel = true;
+            }
 
             if (!File.Exists(configPath))
             {
@@ -156,39 +177,11 @@ namespace FlickrUpload
 
         private PhotosetPhotoCollection GetPhotos(string albumId, Flickr f)
         {
-            //if (PhotoSets == null)
-            //    PhotoSets = new List<PhotosetPhotoCollection>();
-
-            //var outputPhotoSet = PhotoSets.Where(set => set.PhotosetId == albumId).SingleOrDefault();
-
-            //if (outputPhotoSet == null)
-            //{
-            //    outputPhotoSet = f.PhotosetsGetPhotos(albumId);
-            //    PhotoSets.Add(outputPhotoSet);
-            //}
             var outputPhotoSet = f.PhotosetsGetPhotos(albumId);
             return outputPhotoSet;
         }
 
-        //private void CopyFolder(string sourceFolder, string destFolder)
-        //{
-        //    if (!Directory.Exists(destFolder))
-        //        Directory.CreateDirectory(destFolder);
-        //    string[] files = Directory.GetFiles(sourceFolder);
-        //    foreach (string file in files)
-        //    {
-        //        string name = Path.GetFileName(file);
-        //        string dest = Path.Combine(destFolder, name);
-        //        File.Copy(file, dest);
-        //    }
-        //    string[] folders = Directory.GetDirectories(sourceFolder);
-        //    foreach (string folder in folders)
-        //    {
-        //        string name = Path.GetFileName(folder);
-        //        string dest = Path.Combine(destFolder, name);
-        //        CopyFolder(folder, dest);
-        //    }
-        //}
-                
+        
+                       
     }
 }

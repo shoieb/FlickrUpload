@@ -37,6 +37,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.reset = new System.Windows.Forms.Button();
+            this.syncCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -67,7 +68,7 @@
             // 
             // sync
             // 
-            this.sync.Location = new System.Drawing.Point(195, 84);
+            this.sync.Location = new System.Drawing.Point(94, 75);
             this.sync.Name = "sync";
             this.sync.Size = new System.Drawing.Size(120, 23);
             this.sync.TabIndex = 3;
@@ -84,6 +85,10 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerComplete);
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.appTimer_tick);
+            // 
             // reset
             // 
             this.reset.Location = new System.Drawing.Point(160, 126);
@@ -94,12 +99,23 @@
             this.reset.UseVisualStyleBackColor = true;
             this.reset.Click += new System.EventHandler(this.reset_Click);
             // 
+            // syncCancel
+            // 
+            this.syncCancel.Location = new System.Drawing.Point(240, 75);
+            this.syncCancel.Name = "syncCancel";
+            this.syncCancel.Size = new System.Drawing.Size(75, 23);
+            this.syncCancel.TabIndex = 5;
+            this.syncCancel.Text = "Cancel";
+            this.syncCancel.UseVisualStyleBackColor = true;
+            this.syncCancel.Click += new System.EventHandler(this.syncCancel_Click);
+            // 
             // FolderSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(415, 161);
+            this.Controls.Add(this.syncCancel);
             this.Controls.Add(this.reset);
             this.Controls.Add(this.sync);
             this.Controls.Add(this.browse_folder);
@@ -123,5 +139,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button reset;
+        private System.Windows.Forms.Button syncCancel;
     }
 }
