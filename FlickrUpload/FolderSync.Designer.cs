@@ -114,7 +114,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(415, 161);
+            this.ClientSize = new System.Drawing.Size(415, 190);
             this.Controls.Add(this.syncCancel);
             this.Controls.Add(this.reset);
             this.Controls.Add(this.sync);

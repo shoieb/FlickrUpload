@@ -34,6 +34,7 @@ namespace FlickrUpload
             temp = Properties.Settings.Default.OAuthToken;
             Text = "FlickrUpload ( " + temp.Username + " )";
             rootFolderTextBox.Text = Properties.Settings.Default.userDefinedRootFolder;
+            this.MaximizeBox = false;
 
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;            
@@ -109,8 +110,9 @@ namespace FlickrUpload
         private void dirSearch(string searchPath, DoWorkEventArgs e)
         { 
             var dirconfigPath = searchPath + @"\config.ini";
-            iniFile ini = new iniFile(dirconfigPath);
+            //iniFile ini = new iniFile(dirconfigPath);
             var f = FlickrManager.GetAuthInstance();
+
             try
             {
                 foreach (var photoPath in Directory.GetFiles(searchPath, "*.jpg"))
@@ -127,6 +129,7 @@ namespace FlickrUpload
                 MessageBox.Show(ex.Message);
                 log.Fatal(ex.Message, ex);
             }
+            
         }
 
         private void photoUpload(string filePath, string configPath, Flickr f, DoWorkEventArgs e)
@@ -147,6 +150,8 @@ namespace FlickrUpload
                 var strPhotoId = f.UploadPicture(filePath, fileName, "sample", null, false, false, false);
                 Photoset myset = f.PhotosetsCreate(folderName, strPhotoId);
                 ini.IniWriteValue("info", "id", myset.PhotosetId);
+                log.Info("'"+folderName+"'"+" PhotoSet has been created.");
+                log.Info(fileName + " uploaded to PhotoSet '" + folderName + "'.");
             }
             else
             {
@@ -155,13 +160,20 @@ namespace FlickrUpload
                     var albumId = ini.IniReadValue("info", "id");
                     var existingPhoto = GetPhotos(albumId, f).Where(p => p.Title.Contains(fileName)).SingleOrDefault();
                     if (existingPhoto == null)
+                    {
                         f.PhotosetsAddPhoto(albumId, f.UploadPicture(filePath, fileName, "sample", null, false, false, false));
+                        log.Info(fileName + " uploaded to PhotoSet '" + folderName + "'.");
+                    }                       
+                    
                 }
-                catch
+                catch(FlickrException ex)
                 {
+                    log.Fatal(ex.Message, ex);
                     var strPhotoId = f.UploadPicture(filePath, fileName, "sample", null, false, false, false);
                     Photoset myset = f.PhotosetsCreate(folderName, strPhotoId);
                     ini.IniWriteValue("info", "id", myset.PhotosetId);
+                    log.Info("'" + folderName + "'" + " PhotoSet has been created.");
+                    log.Info(fileName + " uploaded to PhotoSet '" + folderName + "'.");
                 }
             }            
         }
